@@ -22,10 +22,12 @@ RUN npm run build --prod
 ### STAGE 2: Run ###
 FROM nginxinc/nginx-unprivileged
 
-RUN rm -rf /usr/share/nginx/html/*
+# USER root
+# RUN touch /run/nginx.pid \
+#  && chown -R api-gatway:api-gatway /run/nginx.pid
 
 #### copy nginx conf
-COPY ./nginx.conf /etc/nginx/conf.d/default.conf
+COPY nginx.conf /etc/nginx/nginx.conf
 
 #### copy artifact build from the 'build environment'
 COPY --from=build /src/dist/angular-deploy/browser /usr/share/nginx/html
