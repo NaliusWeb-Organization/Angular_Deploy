@@ -1,5 +1,5 @@
 ### STAGE 1: Build ###
-FROM node:14 AS build
+FROM node:18-alpine AS build
 
 #### make the 'app' folder the current working directory
 WORKDIR /src
@@ -21,6 +21,8 @@ RUN npm run build --prod
 
 ### STAGE 2: Run ###
 FROM nginxinc/nginx-unprivileged
+
+RUN rm -rf /usr/share/nginx/html/*
 
 #### copy nginx conf
 COPY ./nginx.conf /etc/nginx/conf.d/default.conf
