@@ -1,5 +1,5 @@
 ### STAGE 1: Build ###
-FROM node:lts-alpine AS build
+FROM node:14 AS build
 
 #### make the 'app' folder the current working directory
 WORKDIR /src
