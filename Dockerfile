@@ -1,36 +1,44 @@
 ### STAGE 1: Build ###
-FROM node:18-alpine AS build
+FROM httpd:2.4
 
-#### make the 'app' folder the current working directory
-WORKDIR /src
+# Copier les fichiers de build Angular dans le répertoire htdocs d'Apache
+COPY ./dist/angular-deploy/browser /usr/local/apache2/htdocs/
 
-#### copy both 'package.json' and 'package-lock.json' (if available)
-COPY package*.json ./
+# Exposer le port 80
+EXPOSE 80
 
-#### install angular cli
-RUN npm install -g @angular/cli
+# #### make the 'app' folder the current working directory
+# WORKDIR /src
 
-#### install project dependencies
-RUN npm install
+# #### copy both 'package.json' and 'package-lock.json' (if available)
+# COPY package*.json ./
 
-#### copy things
-COPY . .
+# #### install angular cli
+# RUN npm install -g @angular/cli
 
-#### generate build --prod
-RUN npm run build --prod
+# RUN npm cache clean --force
 
-### STAGE 2: Run ###
-FROM nginxinc/nginx-unprivileged
+# #### install project dependencies
+# RUN npm install
 
-# USER root
-# RUN touch /run/nginx.pid \
-#  && chown -R api-gatway:api-gatway /run/nginx.pid
+# #### copy things
+# COPY . .
 
-#### copy nginx conf
-COPY nginx.conf /etc/nginx/nginx.conf
+# #### generate build --prod
+# RUN npm run build --prod
 
-#### copy artifact build from the 'build environment'
-COPY --from=build /src/dist/angular-deploy/browser /usr/share/nginx/html
+# ### STAGE 2: Run ###
+# FROM nginxinc/nginx-unprivileged
 
-#### don't know what this is, but seems cool and techy
-CMD ["nginx", "-g", "daemon off;"]
+# # USER root
+# # RUN touch /run/nginx.pid \
+# #  && chown -R api-gatway:api-gatway /run/nginx.pid
+
+# #### copy nginx conf
+# #COPY nginx.conf /etc/nginx/nginx.conf
+
+# #### copy artifact build from the 'build environment'
+# COPY --from=build /src/dist/angular-deploy/browser /usr/share/nginx/html
+
+# #### don't know what this is, but seems cool and techy
+# CMD ["nginx", "-g", "daemon off;"]
