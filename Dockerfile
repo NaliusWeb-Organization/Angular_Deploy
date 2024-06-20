@@ -27,7 +27,7 @@ COPY --from=build /src/dist/angular-deploy/browser /usr/share/nginx/html
 
 #### copy nginx conf
 
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY nginx.conf /etc/nginx/nginx.conf
 
 # Exposer le port 4200
 EXPOSE 4200
